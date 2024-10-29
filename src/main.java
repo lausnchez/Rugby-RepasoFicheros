@@ -1,8 +1,10 @@
 import java.io.BufferedReader;
+import java.text.DateFormat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 public class main {
@@ -51,15 +53,28 @@ public class main {
 			String linea = null;
 			while((linea = bufReader.readLine()) != null) {
 				Partido nuevoPartido = dividirDatos(linea);
+				
+				DateFormat formatoFecha = new SimpleDateFormat("dd/mm/yyyy");
+				
 				celda = new StringBuffer(nuevoPartido.getFecha());
 				celda.setLength(NUM_SB);
 				System.out.print(celda);
-				celda = new StringBuffer(nuevoPartido.getJugadorLocal().concat(" -> ".concat(String.valueOf(nuevoPartido.getPuntosLocal()))));
-				celda.setLength(NUM_SB);
-				System.out.print(celda);
-				celda = new StringBuffer(nuevoPartido.getJugadorVisitante().concat(" -> ".concat(String.valueOf(nuevoPartido.getPuntosVisitante()))));
-				celda.setLength(NUM_SB);
-				System.out.println(celda);
+				if(nuevoPartido.getPuntosLocal().equalsIgnoreCase("x")){
+					celda = new StringBuffer(nuevoPartido.getJugadorLocal());
+					celda.setLength(NUM_SB);
+					System.out.print(celda);
+					celda = new StringBuffer(nuevoPartido.getJugadorVisitante());
+					celda.setLength(nuevoPartido.getJugadorVisitante().length());
+					System.out.print(celda);
+					System.out.println(" -> PARTIDO APLAZADO");
+				}else {
+					celda = new StringBuffer(nuevoPartido.getJugadorVisitante().concat(" -> ".concat(String.valueOf(nuevoPartido.getPuntosVisitante()))));
+					celda.setLength(NUM_SB);
+					System.out.print(celda);
+					celda = new StringBuffer(nuevoPartido.getJugadorVisitante().concat(" -> ".concat(String.valueOf(nuevoPartido.getPuntosVisitante()))));
+					celda.setLength(NUM_SB);
+					System.out.println(celda);
+				}	
 			}
 			fReader.close();
 			bufReader.close();
@@ -85,7 +100,11 @@ public class main {
 		nuevoPartido.setJugadorLocal(datos[3]);
 		nuevoPartido.setJugadorVisitante(datos[4]);
 		nuevoPartido.setPuntosLocal(datos[5]);
-		nuevoPartido.setPuntosVisitante(datos[6]);
+		if(nuevoPartido.getPuntosLocal().equals("x")) {
+			nuevoPartido.setPuntosVisitante("APLAZADO");
+		}else {
+			nuevoPartido.setPuntosVisitante(datos[6]);
+		}
 		
 		return nuevoPartido;
 	}

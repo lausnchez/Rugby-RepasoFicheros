@@ -44,6 +44,9 @@ public class main {
 			case 4:
 				paisMenosTantos();
 				break;
+			case 5:
+				paisMasRecibidos();
+				break;
 			case 0: 
 				System.out.println("Hasta pronto!");
 				break;
@@ -290,6 +293,66 @@ public class main {
 			}
 			
 			System.out.println("MENOR CANTIDAD DE TANTOS : " + seleccion + ", " + menorTantos);
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private static void paisMasRecibidos() {
+		HashMap<String, String> tantos = new HashMap<String, String>();
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";			
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				// Si no los contiene
+				if(!tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					String puntos;
+					if(nuevoPartido.getPuntosLocal().equals("x")) puntos = "0";
+					else puntos = nuevoPartido.getPuntosVisitante();
+					tantos.put(nuevoPartido.getJugadorLocal(), puntos);
+				}
+				if(!tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					String puntos;
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) puntos = "0";
+					else puntos = nuevoPartido.getPuntosLocal();
+					tantos.put(nuevoPartido.getPuntosVisitante(), puntos);
+				}
+				// Si los contiene
+				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
+					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
+				}
+				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
+					tantos.put(nuevoPartido.getJugadorVisitante(), String.valueOf(sumaPuntos));
+				}
+			}	
+			int mayorTantos = 0;
+			String seleccion = "";
+			for(String clave : tantos.keySet()) {
+				//System.out.println(clave + ": " + tantos.get(clave));
+				if(mayorTantos < Integer.parseInt(tantos.get(clave))) {
+					mayorTantos = Integer.parseInt(tantos.get(clave));
+					seleccion = clave;
+				}
+			}
+			
+			System.out.println("MAYOR CANTIDAD DE TANTOS : " + seleccion + ", " + mayorTantos);
 			fReader.close();
 			bufReader.close();
 		} catch (FileNotFoundException e) {

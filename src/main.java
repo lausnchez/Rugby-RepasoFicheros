@@ -30,6 +30,7 @@ public class main {
 			System.out.println("2. Mostrar estadios con más espectadores que la media");
 			System.out.println("3. Mostrar el país con más tantos");
 			System.out.println("4. Mostrar el país con menos tantos");
+			System.out.println("5. Mostrar el país con más tantos recibidos");
 			opcion = scan.nextInt();
 			switch(opcion) {
 			case 1:
@@ -330,15 +331,15 @@ public class main {
 				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
 					int sumatorio = 0;
 					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
-					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
-					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
 					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
 				}
 				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
 					int sumatorio = 0;
 					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;
-					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
-					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
 					tantos.put(nuevoPartido.getJugadorVisitante(), String.valueOf(sumaPuntos));
 				}
 			}	
@@ -346,7 +347,7 @@ public class main {
 			String seleccion = "";
 			for(String clave : tantos.keySet()) {
 				//System.out.println(clave + ": " + tantos.get(clave));
-				if(mayorTantos < Integer.parseInt(tantos.get(clave))) {
+				if(mayorTantos > Integer.parseInt(tantos.get(clave))) {
 					mayorTantos = Integer.parseInt(tantos.get(clave));
 					seleccion = clave;
 				}

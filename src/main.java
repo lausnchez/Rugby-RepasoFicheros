@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -8,7 +7,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class main {
@@ -26,10 +25,16 @@ public class main {
 		System.out.println("...................................");
 		System.out.println("0. Salir");
 		System.out.println("1. Mostrar todos los partidos");
+		System.out.println("2. Mostrar estadios con más espectadores que la media");
 		int opcion = scan.nextInt();
 		switch(opcion) {
 			case 1:
 				mostrarTodo();
+				break;
+			case 2:
+				estadiosMayoresMedia();
+				break;
+			case 3:
 				break;
 		}
 	}
@@ -61,7 +66,6 @@ public class main {
 				nuevoPartido.setFecha(nuevoPartido.getFecha().replace('-', '/'));
 				String fechaString = nuevoPartido.getFecha();
 				DateFormat DFormat = new SimpleDateFormat("dd/MM/yyyy");
-				//SimpleDateFormat formato = new SimpleDateFormat(pattern);
 				DateTimeFormatter formatEntrada = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 				DateTimeFormatter formatSalida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 				LocalDate fecha = LocalDate.parse(nuevoPartido.getFecha(), formatEntrada);
@@ -96,6 +100,29 @@ public class main {
 	}
 	
 	/**
+	 * 
+	 */
+	private static void estadiosMayoresMedia() {
+		int media = mediaEspectadores();
+		System.out.println("MEDIA -> " + media);
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";			
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				if(nuevoPartido.getEspectadores()>media) System.out.println(nuevoPartido.getEstadio() + " -> " + nuevoPartido.getEspectadores());
+			}		
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Método que pide una línea y nos almacena todos los datos en
 	 * un objeto de tipo Partido donde podremos recoger y manejar los datos
 	 * @return (Partido) nuevoPartido
@@ -119,6 +146,58 @@ public class main {
 		return nuevoPartido;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
+	private static int mediaEspectadores() {
+		int total = 0;
+		int contador = 0;
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";			
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				total += nuevoPartido.getEspectadores();
+				contador++;
+			}		
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return total/contador;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private static HashMap<Integer, Partido> listadoPartidos(){
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";
+			HashMap<Integer, Partido> listadoPartidos = new HashMap<Integer, Partido>();
+			int id = 0;
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				listadoPartidos.put(id, nuevoPartido);
+				id++;
+			}		
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return listadoPartidos();
+	}
+	
 	/**
 	 * 
 	 * @return (int) número de líneas en el fichero

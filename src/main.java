@@ -48,6 +48,9 @@ public class main {
 			case 5:
 				paisMasRecibidos();
 				break;
+			case 6:
+				dividirDatos("2023-02-02;59000;Lansdown road;Irlanda;Inglaterra;27;16");
+				break;
 			case 0: 
 				System.out.println("Hasta pronto!");
 				break;
@@ -92,8 +95,9 @@ public class main {
 				celda = new StringBuffer(nuevoPartido.getFecha());
 				celda.setLength(NUM_SB);
 				System.out.print(celda);
+				
 				if(nuevoPartido.getPuntosLocal().equalsIgnoreCase("x")){
-					celda = new StringBuffer(nuevoPartido.getJugadorLocal());
+					celda = new StringBuffer(nuevoPartido.getJugadorLocal());	// Imprimir jugador local
 					celda.setLength(NUM_SB);
 					System.out.print(celda);
 					celda = new StringBuffer(nuevoPartido.getJugadorVisitante());
@@ -161,7 +165,6 @@ public class main {
 		}else {
 			nuevoPartido.setPuntosVisitante(datos[6]);
 		}
-		
 		return nuevoPartido;
 	}
 
@@ -314,27 +317,31 @@ public class main {
 			String linea = "";			
 			while((linea = bufReader.readLine()) != null) {
 				Partido nuevoPartido = dividirDatos(linea);
-				// Si no los contiene
+				// NO CONTIENE LOCAL - PUNTOS VISITANTE
 				if(!tantos.containsKey(nuevoPartido.getJugadorLocal())) {
 					String puntos;
 					if(nuevoPartido.getPuntosLocal().equals("x")) puntos = "0";
 					else puntos = nuevoPartido.getPuntosVisitante();
 					tantos.put(nuevoPartido.getJugadorLocal(), puntos);
+					System.out.println("A " + nuevoPartido.getJugadorLocal() + " le han metido " + puntos + " puntos");
 				}
+				// NO CONTIENE VISITANTE - PUNTOS LOCAL
 				if(!tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
 					String puntos;
 					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) puntos = "0";
 					else puntos = nuevoPartido.getPuntosLocal();
 					tantos.put(nuevoPartido.getPuntosVisitante(), puntos);
+					System.out.println("A " + nuevoPartido.getJugadorVisitante() + " le han metido " + puntos + " puntos");
 				}
-				// Si los contiene
+				// CONTIENE LOCAL - PUNTOS VISITANTE
 				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
 					int sumatorio = 0;
 					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
 					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
 					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
 					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
-				}
+				} 
+				// CONTIENE VISITANTE - PUNTOS LOCAL 
 				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
 					int sumatorio = 0;
 					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;

@@ -26,6 +26,8 @@ public class main {
 		System.out.println("0. Salir");
 		System.out.println("1. Mostrar todos los partidos");
 		System.out.println("2. Mostrar estadios con más espectadores que la media");
+		System.out.println("3. Mostrar el país con más tantos");
+		System.out.println("4. Mostrar el país con menos tantos");
 		int opcion = scan.nextInt();
 		switch(opcion) {
 			case 1:
@@ -35,6 +37,10 @@ public class main {
 				estadiosMayoresMedia();
 				break;
 			case 3:
+				paisMasTantos();
+				break;
+			case 4:
+				paisMenosTantos();
 				break;
 		}
 	}
@@ -170,6 +176,118 @@ public class main {
 			e.printStackTrace();
 		}
 		return total/contador;
+	}
+	
+	/**
+	 * 
+	 */
+	private static void paisMasTantos() {
+		HashMap<String, String> tantos = new HashMap<String, String>();
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";			
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				// Si no los contiene
+				if(!tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					if(nuevoPartido.getPuntosLocal().equals("x")) tantos.put(nuevoPartido.getJugadorLocal(), "0");
+					else tantos.put(nuevoPartido.getJugadorLocal(), nuevoPartido.getPuntosLocal());
+				}
+				if(!tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) tantos.put(nuevoPartido.getJugadorVisitante(), "0");
+					else tantos.put(nuevoPartido.getJugadorVisitante(), nuevoPartido.getPuntosVisitante());
+				}
+				// Si los contiene
+				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
+					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
+				}
+				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
+					tantos.put(nuevoPartido.getJugadorVisitante(), String.valueOf(sumaPuntos));
+				}
+			}	
+			int mayorTantos = 0;
+			String seleccion = "";
+			for(String clave : tantos.keySet()) {
+				//System.out.println(clave + ": " + tantos.get(clave));
+				if(mayorTantos < Integer.parseInt(tantos.get(clave))) {
+					mayorTantos = Integer.parseInt(tantos.get(clave));
+					seleccion = clave;
+				}
+			}
+			
+			System.out.println("MAYOR CANTIDAD DE TANTOS : " + seleccion + ", " + mayorTantos);
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	private static void paisMenosTantos() {
+		HashMap<String, String> tantos = new HashMap<String, String>();
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			String linea = "";			
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				// Si no los contiene
+				if(!tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					if(nuevoPartido.getPuntosLocal().equals("x")) tantos.put(nuevoPartido.getJugadorLocal(), "0");
+					else tantos.put(nuevoPartido.getJugadorLocal(), nuevoPartido.getPuntosLocal());
+				}
+				if(!tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) tantos.put(nuevoPartido.getJugadorVisitante(), "0");
+					else tantos.put(nuevoPartido.getJugadorVisitante(), nuevoPartido.getPuntosVisitante());
+				}
+				// Si los contiene
+				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
+					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
+				}
+				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					int sumatorio = 0;
+					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;
+					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
+					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
+					tantos.put(nuevoPartido.getJugadorVisitante(), String.valueOf(sumaPuntos));
+				}
+			}	
+			int menorTantos = 999999999;
+			String seleccion = "";
+			for(String clave : tantos.keySet()) {
+				//System.out.println(clave + ": " + tantos.get(clave));
+				if(menorTantos > Integer.parseInt(tantos.get(clave))) {
+					menorTantos = Integer.parseInt(tantos.get(clave));
+					seleccion = clave;
+				}
+			}
+			
+			System.out.println("MENOR CANTIDAD DE TANTOS : " + seleccion + ", " + menorTantos);
+			fReader.close();
+			bufReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

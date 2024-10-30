@@ -1,3 +1,5 @@
+import java.sql.Date;
+
 public class Partido {
 	String fecha;
 	int espectadores;
@@ -12,7 +14,7 @@ public class Partido {
 	// Constructores
 	//---------------------------------------------------------------
 	public Partido() {
-		this.fecha = "";
+		this.fecha = null;
 		this.espectadores = 0;
 		this.estadio = "";
 		this.jugadorLocal = "";
@@ -20,17 +22,19 @@ public class Partido {
 		this.jugadorVisitante = "";
 		this.puntosVisitante = "";
 	}
-	
-	public Partido(String fecha, int espectadores, String estadio, String local, String puntosLocal, String visitante, String puntosVisitante) {
+		
+	public Partido(String fecha, int espectadores, String estadio, String jugadorLocal, String puntosLocal,
+			String jugadorVisitante, String puntosVisitante) {
+		super();
 		this.fecha = fecha;
 		this.espectadores = espectadores;
 		this.estadio = estadio;
-		this.jugadorLocal = local;
+		this.jugadorLocal = jugadorLocal;
 		this.puntosLocal = puntosLocal;
-		this.jugadorVisitante = visitante;
+		this.jugadorVisitante = jugadorVisitante;
 		this.puntosVisitante = puntosVisitante;
 	}
-	
+
 	// Getters & Setters
 	//---------------------------------------------------------------
 	public String getFecha() {

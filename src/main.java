@@ -1,10 +1,14 @@
 import java.io.BufferedReader;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Scanner;
 
 public class main {
@@ -54,8 +58,14 @@ public class main {
 			while((linea = bufReader.readLine()) != null) {
 				Partido nuevoPartido = dividirDatos(linea);
 				
-				DateFormat formatoFecha = new SimpleDateFormat("dd/mm/yyyy");
-				
+				nuevoPartido.setFecha(nuevoPartido.getFecha().replace('-', '/'));
+				String fechaString = nuevoPartido.getFecha();
+				DateFormat DFormat = new SimpleDateFormat("dd/MM/yyyy");
+				//SimpleDateFormat formato = new SimpleDateFormat(pattern);
+				DateTimeFormatter formatEntrada = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+				DateTimeFormatter formatSalida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+				LocalDate fecha = LocalDate.parse(nuevoPartido.getFecha(), formatEntrada);
+				nuevoPartido.setFecha(fecha.format(formatSalida));
 				celda = new StringBuffer(nuevoPartido.getFecha());
 				celda.setLength(NUM_SB);
 				System.out.print(celda);

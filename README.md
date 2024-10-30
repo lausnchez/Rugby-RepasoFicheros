@@ -14,4 +14,9 @@
 - Leer el archivo CSV y mostrarlo de la siguiente forma <br>
 FECHA / LOCAL / VISITANTE<br>
 02-02-2023 / Irlanda - 27 / Inglaterra - 16 <br>
-02-02-2023 / Francia / Gales -> Aplazado 
+02-02-2023 / Francia / Gales -> Aplazado
+- Mostrar los estadios que tienen más espectadores que la media<br>
+- Mostrar el país que más tantos ha marcado junto con los tantos.<br>
+- Mostrar el país que menos tantos ha marcado junto con los tantos
+
+#### Una vez resuelto el apartado uno se cambiará el resultado del Francia-Gales a 51-42.

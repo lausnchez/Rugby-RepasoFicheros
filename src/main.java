@@ -21,15 +21,17 @@ public class main {
 	}
 	
 	private static void menu() {
-		System.out.println("GESTIÓN DE PARTIDOS DE RUBGY");
-		System.out.println("...................................");
-		System.out.println("0. Salir");
-		System.out.println("1. Mostrar todos los partidos");
-		System.out.println("2. Mostrar estadios con más espectadores que la media");
-		System.out.println("3. Mostrar el país con más tantos");
-		System.out.println("4. Mostrar el país con menos tantos");
-		int opcion = scan.nextInt();
-		switch(opcion) {
+		int opcion;
+		do{
+			System.out.println("\nGESTIÓN DE PARTIDOS DE RUBGY");
+			System.out.println("...................................");
+			System.out.println("0. Salir");
+			System.out.println("1. Mostrar todos los partidos");
+			System.out.println("2. Mostrar estadios con más espectadores que la media");
+			System.out.println("3. Mostrar el país con más tantos");
+			System.out.println("4. Mostrar el país con menos tantos");
+			opcion = scan.nextInt();
+			switch(opcion) {
 			case 1:
 				mostrarTodo();
 				break;
@@ -42,7 +44,14 @@ public class main {
 			case 4:
 				paisMenosTantos();
 				break;
+			case 0: 
+				System.out.println("Hasta pronto!");
+				break;
+			default:
+				System.out.println("Opción incorrecta");
+				break;
 		}
+		}while(opcion!= 0);
 	}
 	
 	/**

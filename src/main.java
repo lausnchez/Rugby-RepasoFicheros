@@ -308,7 +308,9 @@ public class main {
 	}
 	
 	/**
-	 * 
+	 * Recoge todas las líneas transformadas en partidos y crea un HashMap donde almacena el total
+	 * de tantos recibidos. Comprueba cuál es el equipo que más tantos en contra tiene y lo muestra
+	 * por consola.
 	 */
 	private static void paisMasRecibidos() {
 		HashMap<String, Integer> tantos = new HashMap<String, Integer>();
@@ -358,6 +360,8 @@ public class main {
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	/**
 	 * 

@@ -31,6 +31,7 @@ public class main {
 			System.out.println("3. Mostrar el país con más tantos");
 			System.out.println("4. Mostrar el país con menos tantos");
 			System.out.println("5. Mostrar el país con más tantos recibidos");
+			System.out.println("6. Pasar de fichero csv a fichero dat");
 			opcion = scan.nextInt();
 			switch(opcion) {
 			case 1:
@@ -49,7 +50,7 @@ public class main {
 				paisMasRecibidos();
 				break;
 			case 6:
-				dividirDatos("2023-02-02;59000;Lansdown road;Irlanda;Inglaterra;27;16");
+				
 				break;
 			case 0: 
 				System.out.println("Hasta pronto!");
@@ -310,57 +311,45 @@ public class main {
 	 * 
 	 */
 	private static void paisMasRecibidos() {
-		HashMap<String, String> tantos = new HashMap<String, String>();
+		HashMap<String, Integer> tantos = new HashMap<String, Integer>();
 		try {
 			FileReader fReader = new FileReader(fichero);
 			BufferedReader bufReader = new BufferedReader(fReader);
 			String linea = "";			
 			while((linea = bufReader.readLine()) != null) {
 				Partido nuevoPartido = dividirDatos(linea);
-				// NO CONTIENE LOCAL - PUNTOS VISITANTE
+			
 				if(!tantos.containsKey(nuevoPartido.getJugadorLocal())) {
-					String puntos;
-					if(nuevoPartido.getPuntosLocal().equals("x")) puntos = "0";
-					else puntos = nuevoPartido.getPuntosVisitante();
-					tantos.put(nuevoPartido.getJugadorLocal(), puntos);
-					System.out.println("A " + nuevoPartido.getJugadorLocal() + " le han metido " + puntos + " puntos");
+					tantos.put(nuevoPartido.getJugadorLocal(), 0);
 				}
-				// NO CONTIENE VISITANTE - PUNTOS LOCAL
 				if(!tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
-					String puntos;
-					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) puntos = "0";
-					else puntos = nuevoPartido.getPuntosLocal();
-					tantos.put(nuevoPartido.getPuntosVisitante(), puntos);
-					System.out.println("A " + nuevoPartido.getJugadorVisitante() + " le han metido " + puntos + " puntos");
+					tantos.put(nuevoPartido.getJugadorVisitante(), 0);
 				}
-				// CONTIENE LOCAL - PUNTOS VISITANTE
 				if(tantos.containsKey(nuevoPartido.getJugadorLocal())) {
-					int sumatorio = 0;
-					if(nuevoPartido.getPuntosLocal().equals("x")) sumatorio = 0;
-					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosVisitante());
-					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorVisitante()));
-					tantos.put(nuevoPartido.getJugadorLocal(), String.valueOf(sumaPuntos));
-				} 
-				// CONTIENE VISITANTE - PUNTOS LOCAL 
-				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
-					int sumatorio = 0;
-					if(nuevoPartido.getPuntosVisitante().equals("APLAZADO")) sumatorio = 0;
-					else sumatorio = Integer.parseInt(nuevoPartido.getPuntosLocal());
-					int sumaPuntos = sumatorio + Integer.parseInt(tantos.get(nuevoPartido.getJugadorLocal()));
-					tantos.put(nuevoPartido.getJugadorVisitante(), String.valueOf(sumaPuntos));
+					int suma;
+					if(!nuevoPartido.getPuntosLocal().equals("x")) 
+						suma = tantos.get(nuevoPartido.getJugadorLocal()) + Integer.parseInt(nuevoPartido.getPuntosVisitante());
+					else suma = tantos.get(nuevoPartido.getJugadorLocal());
+					tantos.put(nuevoPartido.getJugadorLocal(), suma);
 				}
-			}	
-			int mayorTantos = 0;
+				if(tantos.containsKey(nuevoPartido.getJugadorVisitante())) {
+					int suma;
+					if(!nuevoPartido.getPuntosVisitante().equals("APLAZADO")) 
+						suma = tantos.get(nuevoPartido.getJugadorVisitante()) + Integer.parseInt(nuevoPartido.getPuntosLocal());
+					else suma = tantos.get(nuevoPartido.getJugadorVisitante());
+					tantos.put(nuevoPartido.getJugadorVisitante(), suma);
+				}				
+			}
+			
 			String seleccion = "";
-			for(String clave : tantos.keySet()) {
-				//System.out.println(clave + ": " + tantos.get(clave));
-				if(mayorTantos > Integer.parseInt(tantos.get(clave))) {
-					mayorTantos = Integer.parseInt(tantos.get(clave));
+			int puntosMax = 0;
+			for(String clave: tantos.keySet()) {
+				if(puntosMax < tantos.get(clave)) {
+					puntosMax = tantos.get(clave);
 					seleccion = clave;
 				}
 			}
-			
-			System.out.println("MAYOR CANTIDAD DE TANTOS : " + seleccion + ", " + mayorTantos);
+			System.out.println("La selección que ha recibido más goles es " + seleccion + " con " + puntosMax + " goles recibidos.");
 			fReader.close();
 			bufReader.close();
 		} catch (FileNotFoundException e) {

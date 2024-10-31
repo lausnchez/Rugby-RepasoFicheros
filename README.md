@@ -19,4 +19,5 @@ FECHA / LOCAL / VISITANTE<br>
 - Mostrar el país que más tantos ha marcado junto con los tantos.<br>
 - Mostrar el país que menos tantos ha marcado junto con los tantos<br>
 - Mostrar el país que más tantos ha recibido junto con los tantos<br>
+- Pasar el fichero csv a un archivo de objetos (al final mostramos el fichero)<br>
 #### Una vez resuelto el apartado uno se cambiará el resultado del Francia-Gales a 51-42.

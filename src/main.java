@@ -1,9 +1,13 @@
+import java.awt.Desktop;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.text.DateFormat;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -50,7 +54,7 @@ public class main {
 				paisMasRecibidos();
 				break;
 			case 6:
-				
+				pasarDat();
 				break;
 			case 0: 
 				System.out.println("Hasta pronto!");
@@ -58,7 +62,7 @@ public class main {
 			default:
 				System.out.println("Opción incorrecta");
 				break;
-		}
+			}
 		}while(opcion!= 0);
 	}
 	
@@ -361,7 +365,124 @@ public class main {
 		}
 	}
 	
+	/**
+	 * 
+	 */
+	private static void pasarDat() {
+		try {
+			FileReader fReader = new FileReader(fichero);
+			BufferedReader bufReader = new BufferedReader(fReader);
+			File ficheroDat = new File("src/ficheros/partidos.dat");
+			RandomAccessFile raf = new RandomAccessFile(ficheroDat, "rw");
+			String linea;
+			while((linea = bufReader.readLine()) != null) {
+				Partido nuevoPartido = dividirDatos(linea);
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getFecha())).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(String.valueOf(nuevoPartido.getEspectadores()))).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getEstadio())).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getJugadorLocal())).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getPuntosLocal())).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getJugadorVisitante())).toString());
+				raf.writeChars(new StringBuffer(pasarSBuffer(nuevoPartido.getPuntosVisitante())).toString());
+			}	
+			
+			leerDat(ficheroDat);
+			raf.close();
+			bufReader.close();
+			fReader.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	
+	public static void leerDat(File ficheroDat) {
+		Partido[] listadoPartidos =  new Partido[numeroLineasFichero()];
+		try {
+			RandomAccessFile raf = new RandomAccessFile(ficheroDat, "r");
+			String linea;
+			int contador = 0, espectadores = 0, numPartidos = 0;
+			String fecha ="", estadio ="", jugadorLocal="", puntosLocal = "", jugadorVisitante ="", puntosVisitante = "";			
+			while((linea = raf.readLine()) != null) {
+//				switch (contador) {
+//				case 0:
+//					fecha = linea;
+//					break;
+//				case 1:
+//					espectadores = Integer.parseInt(linea);
+//					break;
+//				case 2:
+//					estadio = linea;
+//					break;
+//				case 3:
+//					jugadorLocal = linea;
+//					break;
+//				case 4:
+//					puntosLocal = linea;
+//					break;
+//				case 5:
+//					jugadorVisitante = linea; 
+//					break;
+//				case 6:
+//					puntosVisitante = linea;
+//					Partido nuevoPartido = new Partido(fecha, espectadores, estadio, jugadorLocal, puntosLocal, jugadorVisitante, puntosVisitante);
+//					listadoPartidos[numPartidos] = nuevoPartido;
+//					numPartidos++;
+//					break;
+//				}
+//				if(contador < 6) contador++;
+//				if(contador == 6) contador = 0;
+				contador = 0;
+				while(contador<6) {
+					switch (contador) {
+						case 0:
+							fecha = linea;
+							break;
+						case 1:
+							espectadores = Integer.parseInt(linea);
+							break;
+						case 2:
+							estadio = linea;
+							break;
+						case 3:
+							jugadorLocal = linea;
+							break;
+						case 4:
+							puntosLocal = linea;
+							break;
+						case 5:
+							jugadorVisitante = linea; 
+							break;
+						case 6:
+							puntosVisitante = linea;
+							Partido nuevoPartido = new Partido(fecha, espectadores, estadio, jugadorLocal, puntosLocal, jugadorVisitante, puntosVisitante);
+							listadoPartidos[numPartidos] = nuevoPartido;
+							numPartidos++;
+							break;
+					}
+					contador++;
+				}
+			}
+			raf.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 * @param linea
+	 * @return
+	 */
+	private static StringBuffer pasarSBuffer(String linea) {
+		StringBuffer sb =  new StringBuffer(linea);
+		sb.setLength(30);
+		return sb;
+	}
 	
 	/**
 	 * 
